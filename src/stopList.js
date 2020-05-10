@@ -21,11 +21,7 @@ export default class StopList extends React.Component {
             temp: null,
             page: "stoplist",
             username: this.props.username,
-            admin: this.props.admin,
-            order: "down",
-            field: "name",
-            searchType: "name",
-            searchContent: "",
+            admin: this.props.admin
         };
 
         var stopList;
@@ -161,6 +157,7 @@ export default class StopList extends React.Component {
                 if (data.stopRemoved == 1) {
                     console.log(data)
                     var index0 = this.state.favourite.findIndex(element => element.stopname == name);
+                    var index1 = this.state.filteredData.findIndex(element => element.stopname == name)
                     var favorite = this.state.favourite
                     this.setState({
                         temp: favorite.splice(index0, 1),
@@ -194,41 +191,10 @@ export default class StopList extends React.Component {
             return true;
         return false;
     }
-    changeOrder = (e) => {
-        if(this.state.order=="up")
-            this.setState({order: "down"});
-        else
-            this.setState({order: "up"});
-    }
-    fieldToDistance = (e) => {
-        this.setState({field: "dist"});
-    }
-    fieldToName = (e) => {
-        this.setState({field: "name"});
-    }
-    fieldToRoute = (e) => {
-        this.setState({field: "route"});
-    }
-    searchTypeToName = (e) => {
-        this.setState({searchType: "name"});
-    }
-    searchTypeToRoute = (e) => {
-        this.setState({searchType: "route"});
-    }
-    handleSearchContent = (e) => {
-        this.setState({searchContent: e.target.value});
-    }
+
     render() {
         return (
-            <div className="container mt-3">
-                <div className="row d-flex align-items-center">
-                    <div className="col-2"></div>
-                    <SearchBar searchType={this.state.searchType} searchTypeToName={this.searchTypeToName} searchTypeToRoute={this.searchTypeToRoute} handleSearchContent={this.handleSearchContent}/>
-                </div>
-                <div className="row">
-                    <div className="col-6"></div>
-                    <SortBar changeOrder={this.changeOrder} order={this.state.order} fieldToName={this.fieldToName} fieldToRoute={this.fieldToRoute} fieldToDistance={this.fieldToDistance}/>
-                </div>
+            <div className="container">
                 <div className="d-flex justify-content-center">
                     <div className="card-columns mt-3 text-center">
                         {this.state.filteredData.map(stop =>
@@ -247,6 +213,7 @@ export default class StopList extends React.Component {
 class StopItem extends React.Component {
     render() {
         return (
+
             <div className="card mb-3">
                 <div className="row no-gutters">
                     <div className="col-md-4 bg-light d-flex justify-content-center align-items-center">
@@ -279,54 +246,46 @@ class StopItem extends React.Component {
                     </div>
                 </div>
             </div>
-        )
-    }
-}
-class SearchBar extends React.Component {
-    render() {
-        return (
-            <div className="input-group col-8">
-                <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{this.props.searchType=="name"?"Name": "Route"}</button>
-                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button className="dropdown-item" onClick={(e) => this.props.searchTypeToName(e)}>Name</button>
-                        <button className="dropdown-item" onClick={(e) => this.props.searchTypeToRoute(e)}>Route</button>
-                    </div>
-                </div>
-                <input type="text" className="form-control" placeholder="Search" onChange={(e) => this.props.handleSearchContent(e)}/>
-            </div>
-        )
-    }
-}
-class SortBar extends React.Component {
 
-    render() {
-        return (
-            <div>
-                <div className="container mt-3">
-                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label className="btn btn-secondary active" onClick={(e) => this.props.fieldToName(e)}>
-                            <input type="radio" name="options" checked /> Name
-                        </label>
-                        <label className="btn btn-secondary" onClick={(e) => this.props.fieldToRoute(e)}>
-                            <input type="radio" name="options" /> Route
-                        </label>
-                        <label className="btn btn-secondary" onClick={(e) => this.props.fieldToDistance(e)}>
-                            <input type="radio" name="options" /> Distance from home
-                        </label>
-                    </div>
-                    <button className="btn btn-outline-secondary ml-1 float-center" onClick={(e) => this.props.changeOrder(e)}>
-                        <svg viewBox="0 0 512 512" width="24px">
-                            {this.props.order=="down" ?
-                                <path fill="currentColor" d="M240 96h64a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16h-64a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm0 128h128a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm256 192H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h256a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-256-64h192a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zM16 160h48v304a16 16 0 0 0 16 16h32a16 16 0 0 0 16-16V160h48c14.21 0 21.39-17.24 11.31-27.31l-80-96a16 16 0 0 0-22.62 0l-80 96C-5.35 142.74 1.78 160 16 160z"></path>
-                                :
-                                <path fill="currentColor" d="M240 96h64a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16h-64a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm0 128h128a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm256 192H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h256a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16zm-256-64h192a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H240a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16zm-64 0h-48V48a16 16 0 0 0-16-16H80a16 16 0 0 0-16 16v304H16c-14.19 0-21.37 17.24-11.29 27.31l80 96a16 16 0 0 0 22.62 0l80-96C197.35 369.26 190.22 352 176 352z"></path>
-                            }
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        );
+            /*            <div className="stopItem card bg-light">
+                            <div className="card-header">
+                                <div className="row">
+                                    <div className="col-12 "><h4>{this.props.stopName}
+                                        <span className="float-right">
+                                            {this.props.inFavourite ? (
+                                                <svg data-toggle="popover" data-content="Some" onClick={(e) => this.props.delFavHandler(this.props.stopName, e)} className="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="#ea0000" xmlns="http://www.w3.org/2000/svg">
+                                                    <path fillRule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" clipRule="evenodd" />
+                                                </svg>) : (
+                                                    <svg onClick={(e) => this.props.addFavHandler(this.props.stopName, e)} className="bi bi-heart" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fillRule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 01.176-.17C12.72-3.042 23.333 4.867 8 15z" clipRule="evenodd" />
+                                                    </svg>
+                                                )
+                                            }
+                                        </span>
+                                    </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-6">
+                                        <h5 className="card-title">Location longtitude:</h5>
+                                        <p className="card-text">{this.props.longtitude}</p>
+                                    </div>
+                                    <div className="col-6">
+                                        <h5 className="card-title">Location latitude:</h5>
+                                        <p className="card-text">{this.props.latitude}</p>
+                                    </div>
+                                </div>
+            
+                            </div>
+                            <div className="card-footer text-primary">
+                                <a className="btn" data-toggle="modal" data-target={"#Modal" + this.props.stopName}>Location detail</a>
+                            </div>
+            
+                        </div>
+                        */
+        )
     }
 }
 
